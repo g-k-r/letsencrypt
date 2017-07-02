@@ -12,13 +12,10 @@ ETC_DIR=$(DESTDIR)/etc/dehydrated
 VAR_DIR=$(DESTDIR)/var/lib/dehydrated/
 DOC_DIR=$(DESTDIR)/usr/share/doc/dehydrated
 
-REVISION = v0.4.0
-
 all : update tmp/config.local tmp/config
 
 $(TARGET) :
-	@git clone https://github.com/lukas2511/dehydrated.git
-	@( cd $(TARGET) ; git fetch; git checkout $(REVISION) )
+	@( mkdir -p $(TARGET) )
 
 tmp/config :
 	@mkdir -p tmp
@@ -50,7 +47,7 @@ endif
 	@echo 'HOOK_CHAIN="yes"' >> tmp/config.local
 
 update : $(TARGET)
-	@( cd $(TARGET) ; git fetch; git checkout $(REVISION) )
+	@( git submodule init -- $(TARGET) && git submodule update -- $(TARGET) )
 
 clean:
 	rm -rf tmp/config.local tmp/config
